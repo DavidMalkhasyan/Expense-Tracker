@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="main">
+    <div class="summary">
+      <div class="summary__section">
+        <p class="summary__label">Total income</p>
+        <p class="summary__label">Total expense</p>
+        <p class="summary__label">Total Balance</p>
+      </div>
+      <div class="income-input">
+        <p class="income-input__label">INPUT YOUR INCOME</p>
+        <input class="income-input__field" type="text" placeholder="Income name">
+        <input class="income-input__field" type="number" placeholder="Income amount">
+        <button class="income-input__submit" type="submit">Submit</button>
+      </div>
+    </div>
+
+    <div class="transactions">
+      <div class="transactions__section">
+        <div class="transactions__list">
+          <p class="transactions__header">EXPENSE</p>
+          <p class="transactions__header">AMOUNT</p>
+          <ul class="transactions__list-items" id="expense-list">
+          </ul>
+        </div>
+        <div class="transactions__list">
+          <p class="transactions__header">INCOME</p>
+          <p class="transactions__header">AMOUNT</p>
+          <ul class="transactions__list-items" id="income-list">
+          </ul>
+        </div>
+      </div>
+      <div class="expense-input">
+        <p class="expense-input__label">INPUT YOUR EXPENSE</p>
+        <input class="expense-input__field" type="text" placeholder="Expense name">
+        <input class="expense-input__field" type="number" placeholder="Expense amount">
+        <button class="expense-input__submit" type="submit">Submit</button>
+      </div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
