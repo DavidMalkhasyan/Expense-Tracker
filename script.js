@@ -133,24 +133,42 @@ class FinanceService {
             );
         }
     }
+    reset() {
+        this.incomeArr = [];
+        this.expensArr = [];
+        this.saveIncome();
+        this.saveExpens();
+        localStorage.clear();
+    }
 }
 
 class UI {
     constructor() {
         this.incomeList = document.querySelector("#income-list");
         this.expenseList = document.querySelector("#expense-list");
+        this.deleteNode();
     }
 
     renderIncome(income) {
         const li = document.createElement("li");
         li.textContent = `${income.name}: $${income.amount}`;
         this.incomeList.appendChild(li);
+        const button = document.createElement("button");
+        li.appendChild(button);
+        button.textContent = "Delete";
+        button.classList.add("delete");
+        this.deleteNode();
     }
 
     renderExpense(expense) {
         const li = document.createElement("li");
         li.textContent = `${expense.name}: $${expense.amount}`;
         this.expenseList.appendChild(li);
+        const button = document.createElement("button");
+        li.appendChild(button);
+        button.textContent = "Delete";
+        button.classList.add("delete");
+        this.deleteNode();
     }
 
     renderSummary(summary) {
@@ -159,16 +177,50 @@ class UI {
             <p class="summary__label">Total Income: $${summary.totalIncome}</p>
             <p class="summary__label">Total Expense: $${summary.totalExpense}</p>
             <p class="summary__label">Total Balance: $${summary.totalBalance}</p>
+            <button class="summary_reset" type="reset">Reset</button>
         `;
-      }
 
-      renderAll(income,expense,summary){
-          income.map((e) => this.renderIncome(e))
-          expense.map((e) =>this.renderExpense(e))
-          this.renderSummary(summary)
-      }
+        const resetSub = document.querySelector(".summary_reset");
+        resetSub.addEventListener("click", (e) => {
+            financeService.reset();
+            ui.renderAll(
+                financeService.getIncomes(),
+                financeService.getExpenses(),
+                financeService.getSummary()
+            );
+            this.deleteNode();
+            location.reload();
+        });
+    }
+
+    renderAll(income, expense, summary) {
+        income.map((e) => this.renderIncome(e));
+        expense.map((e) => this.renderExpense(e));
+        this.renderSummary(summary);
+    }
+
+    deleteNode() {
+        this.incomeList.addEventListener("click", (e) => {
+            if (e.target.classList.contains("delete")) {
+                const li = e.target.parentElement;
+                const name = li.textContent.split(":")[0];
+                financeService.deleteByName(name);
+                li.remove();
+                this.renderSummary(financeService.getSummary());
+            }
+        });
+    
+        this.expenseList.addEventListener("click", (e) => {
+            if (e.target.classList.contains("delete")) {
+                const li = e.target.parentElement;
+                const name = li.textContent.split(":")[0];
+                financeService.deleteByName(name);
+                li.remove();
+                this.renderSummary(financeService.getSummary());
+            }
+        });
+    }
 }
-
 
 const incomeSub = document.querySelector(".income-input__submit");
 const expensSub = document.querySelector(".expense-input__submit");
@@ -176,7 +228,11 @@ const expensSub = document.querySelector(".expense-input__submit");
 const financeService = new FinanceService();
 const ui = new UI();
 
-ui.renderAll(financeService.getIncomes(),financeService.getExpenses(),financeService.getSummary());
+ui.renderAll(
+    financeService.getIncomes(),
+    financeService.getExpenses(),
+    financeService.getSummary()
+);
 
 incomeSub.addEventListener("click", (e) => {
     const name = document.querySelector(".income_name").value;
@@ -208,9 +264,7 @@ expensSub.addEventListener("click", (e) => {
     financeService.addExpense(name, amount);
     ui.renderExpense(new Expense(name, amount));
     ui.renderSummary(financeService.getSummary());
-    
+
     document.querySelector(".expense_name").value = "";
     document.querySelector(".expense_amount").value = "";
 });
-
-
